@@ -89,6 +89,14 @@ class SearchProblem:
         util.raiseNotDefined()
 
 
+class ChildNode:
+    def __init__(self, state, parent, action, cost):
+        self.state = state
+        self.parent = parent
+        self.action = action
+        self.cost = cost
+        
+
 def tinyMazeSearch(problem):
     """
     Returns a sequence of moves that solves tinyMaze.  For any other maze, the
@@ -113,12 +121,50 @@ def depthFirstSearch(problem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    expanded_node = {}
+    dfs_stack = util.Stack()
+    dfs_stack.push(ChildNode(problem.getStartState(), None, None, 0))
+    result_path = []
+    while dfs_stack.isEmpty() is False:
+        cur_node = dfs_stack.pop()
+        if problem.isGoalState(cur_node.state) is True:
+            result_path = []
+            while cur_node.action is not None:
+                result_path.append(cur_node.action)
+                cur_node = cur_node.parent
+            result_path.reverse()
+            return result_path
+        if cur_node.state not in expanded_node.keys():
+            child_node_list = problem.expand(cur_node.state)
+            expanded_node[cur_node.state] = None
+            for child_node in child_node_list:
+                dfs_stack.push(ChildNode(child_node[0], cur_node, child_node[1], cur_node[2]))
+    return result_path
+    # util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    expanded_node = {}
+    bfs_queue = util.Queue()
+    bfs_queue.push(ChildNode(problem.getStartState(), None, None, 0))
+    result_path = []
+    while bfs_queue.isEmpty() is False:
+        cur_node = bfs_queue.pop()
+        if problem.isGoalState(cur_node.state) is True:
+            result_path = []
+            while cur_node.action is not None:
+                result_path.append(cur_node.action)
+                cur_node = cur_node.parent
+            result_path.reverse()
+            return result_path
+        if cur_node.state not in expanded_node.keys():
+            child_node_list = problem.expand(cur_node.state)
+            expanded_node[cur_node.state] = None
+            for child_node in child_node_list:
+                bfs_queue.push(ChildNode(child_node[0], cur_node, child_node[1], cur_node[2]))
+    return result_path
+    # util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
     """
@@ -130,6 +176,26 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+    expanded_node = {}
+    astar_priqueue = util.PriorityQueue()
+    astar_priqueue.update(ChildNode(problem.getStartState(), None, None, 0), heuristic(problem.getStartState(), problem))
+    result_path = []
+    while astar_priqueue.isEmpty() is False:
+        cur_node = astar_priqueue.pop()
+        if problem.isGoalState(cur_node.state) is True:
+            result_path = []
+            while cur_node.action is not None:
+                result_path.append(cur_node.action)
+                cur_node = cur_node.parent
+            result_path.reverse()
+            return result_path
+        if cur_node.state not in expanded_node.keys():
+            child_node_list = problem.expand(cur_node.state)
+            expanded_node[cur_node.state] = None
+            for child_node in child_node_list:
+                # print(heuristic(child_node[0], problem))
+                astar_priqueue.update(ChildNode(child_node[0], cur_node, child_node[1], child_node[2] + cur_node.cost), child_node[2] + cur_node.cost + heuristic(child_node[0], problem))
+    return result_path
     util.raiseNotDefined()
 
 
