@@ -138,7 +138,7 @@ def depthFirstSearch(problem):
             child_node_list = problem.expand(cur_node.state)
             expanded_node[cur_node.state] = None
             for child_node in child_node_list:
-                dfs_stack.push(ChildNode(child_node[0], cur_node, child_node[1], cur_node[2]))
+                dfs_stack.push(ChildNode(child_node[0], cur_node, child_node[1], cur_node.cost))
     return result_path
     # util.raiseNotDefined()
 
@@ -162,7 +162,12 @@ def breadthFirstSearch(problem):
             child_node_list = problem.expand(cur_node.state)
             expanded_node[cur_node.state] = None
             for child_node in child_node_list:
-                bfs_queue.push(ChildNode(child_node[0], cur_node, child_node[1], cur_node[2]))
+                # print("child_node type : ", type(child_node))
+                # print(child_node[0])
+                # print(child_node[1])
+                # print(child_node[2])
+                # print(cur_node)
+                bfs_queue.push(ChildNode(child_node[0], cur_node, child_node[1], cur_node.cost))
     return result_path
     # util.raiseNotDefined()
 

@@ -308,6 +308,7 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
         "*** YOUR CODE HERE ***"
+        self.startState = ((self.startingPosition), (False, False, False, False))
 
     def getStartState(self):
         """
@@ -315,6 +316,8 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
+        print(self.startingPosition)
+        return self.startState
         util.raiseNotDefined()
 
     def isGoalState(self, state):
@@ -322,6 +325,10 @@ class CornersProblem(search.SearchProblem):
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
+        for flag in state[1]:
+            if flag is False:
+                return False
+        return True
         util.raiseNotDefined()
 
     def expand(self, state):
@@ -340,6 +347,8 @@ class CornersProblem(search.SearchProblem):
             # Add a child state to the child list if the action is legal
             # You should call getActions, getActionCost, and getNextState.
             "*** YOUR CODE HERE ***"
+            next_State = self.getNextState(state, action)
+            children.append((next_State, action, self.getActionCost(state, action, next_State)))
 
         self._expanded += 1 # DO NOT CHANGE
         return children
@@ -367,9 +376,14 @@ class CornersProblem(search.SearchProblem):
         dx, dy = Actions.directionToVector(action)
         nextx, nexty = int(x + dx), int(y + dy)
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # util.raiseNotDefined()
         # you will need to replace the None part of the following tuple.
-        return ((nextx, nexty), None)
+        for (i, corner) in enumerate(self.corners):
+            if (nextx, nexty) == corner:
+                flags = list(state[1])
+                flags[i] = True
+                return ((nextx, nexty), tuple(flags))        
+        return ((nextx, nexty), state[1])
 
     def getCostOfActionSequence(self, actions):
         """
@@ -402,6 +416,12 @@ def cornersHeuristic(state, problem):
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
     "*** YOUR CODE HERE ***"
+    total_cost = 0
+    x, y = state[0]
+    for (i, flag) in state[1]:
+        if flag is False:
+            total_cost += abs(x - corners[i][0]) + abs(y - corners[i][1])
+    return total_cost
     return 0 # Default to trivial solution
 
 class AStarCornersAgent(SearchAgent):
