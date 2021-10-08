@@ -316,7 +316,7 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        print(self.startingPosition)
+        # print(self.startingPosition)
         return self.startState
         util.raiseNotDefined()
 
@@ -418,9 +418,9 @@ def cornersHeuristic(state, problem):
     "*** YOUR CODE HERE ***"
     total_cost = 0
     x, y = state[0]
-    for (i, flag) in state[1]:
+    for (i, flag) in enumerate(list(state[1])):
         if flag is False:
-            total_cost += abs(x - corners[i][0]) + abs(y - corners[i][1])
+            total_cost = max(abs(x - corners[i][0]) + abs(y - corners[i][1]), total_cost)
     return total_cost
     return 0 # Default to trivial solution
 

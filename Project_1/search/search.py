@@ -199,7 +199,8 @@ def aStarSearch(problem, heuristic=nullHeuristic):
             expanded_node[cur_node.state] = None
             for child_node in child_node_list:
                 # print(heuristic(child_node[0], problem))
-                astar_priqueue.update(ChildNode(child_node[0], cur_node, child_node[1], child_node[2] + cur_node.cost), child_node[2] + cur_node.cost + heuristic(child_node[0], problem))
+                cN = ChildNode(child_node[0], cur_node, child_node[1], child_node[2] + cur_node.cost)
+                astar_priqueue.update(cN, cN.cost + heuristic(cN.state, problem))
     return result_path
     util.raiseNotDefined()
 
