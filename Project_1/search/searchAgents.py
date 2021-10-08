@@ -536,8 +536,29 @@ def foodHeuristic(state, problem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
+    import util
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
+    '''
+    def get_max_goal_cost_and_index(cur_position, goals):
+        cur_cost = 0
+        index = -1
+        for (i, corner) in enumerate(goals):
+            if util.manhattanDistance(cur_position, corner) > cur_cost:
+                cur_cost = util.manhattanDistance(cur_position, corner)
+                index = i
+        return cur_cost, index
+    '''
+    total_cost = 0
+    foodCorners = foodGrid.asList()
+    for corner in foodCorners:
+        if (position, corner) in problem.heuristicInfo.keys():
+            cur_cost = problem.heuristicInfo[(position, corner)]
+        else:
+            cur_cost = mazeDistance(position, corner, problem.startingGameState)
+            problem.heuristicInfo[(position, corner)] = cur_cost          
+        total_cost = max(cur_cost, total_cost)
+    return total_cost
     return 0
 
 class ClosestDotSearchAgent(SearchAgent):
